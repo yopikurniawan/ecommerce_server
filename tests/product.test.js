@@ -338,9 +338,8 @@ describe('Product Routes Test', () => {
       request(app)
       .get('/products')
       .then((result) => {
-        const {body, status} = result
+        const {status} = result
         expect(status).toBe(200)
-        expect(body).toHaveProperty('products', expect.any(Array))
         done()
       }).catch((err) => {
         done(err)
@@ -395,9 +394,9 @@ describe('Product Routes Test', () => {
 
     const updatedContent = {
       name: 'Cap',
-      price: 100000,
+      price: '100000',
       image_url: 'https://image.freepik.com/free-psd/cap-mockup_1310-498.jpg',
-      stock: 10
+      stock: '10'
     }
 
     beforeAll(done => {
@@ -416,18 +415,61 @@ describe('Product Routes Test', () => {
     test.skip('200 Success Update Product - should update a Product if authorized', done => {
       request(app)
       .put(`/products/${user2Product.id}}`)
-      .send(updatedContent)
       .set('access_token', adminToken)
+      .send(updatedContent)
       .then((result) => {
         const {body, status} = result
         const {name, price, image_url, stock} = updatedContent
         expect(status).toBe(200)
-        // expect(body).toHaveProperty('id', expect.any(Number))
+        expect(body).toHaveProperty('id', expect.any(Number))
         expect(body).toHaveProperty('name', name)
         expect(body).toHaveProperty('price', price)
         expect(body).toHaveProperty('image_url', image_url)
         expect(body).toHaveProperty('stock', stock)
-        // expect(body).toHaveProperty('UserId', userId2)
+        expect(body).toHaveProperty('UserId', userId2)
+        done()
+      }).catch((err) => {
+        done(err)
+      });
+    })
+
+    test('401 Failed update Products - should not update a Products if not authorized', (done) => {
+      request(app)
+      .put(`/products/${user2Product.id}}`)
+      .send(updatedContent)
+      .set('access_token', fakeAdminToken)
+      .then((result) => {
+        const {body, status} = result
+        expect(status).toBe(401)
+        expect(body).toHaveProperty('message', 'You are not authorized')
+        done()
+      }).catch((err) => {
+        done(err)        
+      });
+    })
+
+    test('407 Failed update Products - should not update a Products if not login', done => {
+      request(app)
+      .put(`/products/${user2Product.id}}`)
+      .send(updatedContent)
+      .then((result) => {
+        const {body, status} = result
+        expect(status).toBe(407)
+        expect(body).toHaveProperty('message', 'Authentication required')
+        done()
+      }).catch((err) => {
+        done(err)        
+      });
+    })
+
+    test('404 Failed update Product - should not update a Product if not found', done => {
+      request(app)
+      .put(`/products/-1`)
+      .set('access_token', adminToken)
+      .then((result) => {
+        const {body, status} = result
+        expect(status).toBe(404)
+        expect(body).toHaveProperty('message', 'Update product failed')
         done()
       }).catch((err) => {
         done(err)
