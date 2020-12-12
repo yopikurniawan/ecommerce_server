@@ -4,7 +4,8 @@
   "description": "List of available endpoints:  * POST /register * POST /login/admin * POST /login/customer ---- * GET /products * GET /products/:id * POST /products * PUT /products/:id * DELETE /products/:id",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --runInBand --verbose --forceExit"
+    "test": "jest --detectOpenHandles --runInBand --verbose --forceExit",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
