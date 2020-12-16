@@ -1,8 +1,15 @@
 'use strict';
 const {Model} = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
+      Product.belongsToMany(models.User, {
+        through: models.Cart
+      })
+      Product.belongsToMany(models.User, {
+        through: models.History
+      })
     }
   };
   Product.init({
@@ -13,15 +20,15 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           args: true,
-          message: "Name cannot be empty"
+          msg: "Name cannot be empty"
         },
         notEmpty: {
           args: true,
-          message: "Name cannot be empty"
+          msg: "Name cannot be empty"
         },
         isAlphanumeric: {
           args: true,
-          message: 'Only allow alphanumeric characters'
+          msg: 'Only allow alphanumeric characters'
         }
       }
     },
@@ -30,13 +37,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          message: "Image cannot be empty"
+          msg: "Image cannot be empty"
         },
         notEmpty: {
-          message: "Image cannot be empty"
+          msg: "Image cannot be empty"
         },
         isUrl: {
-          message: 'Url format required'
+          msg: 'Url format required'
         }
       }
     },
@@ -45,17 +52,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          message: `Price can't be empty`
+          msg: `Price can't be empty`
         },
         notEmpty: {
-          message: `Price can't be empty`
+          msg: `Price can't be empty`
         },
         isNumeric: {
-          message: 'Price must be a number'
+          msg: 'Price must be a number'
         },
         min: {
           args: 1,
-          message: `Price can't be a minus`
+          msg: `Price can't be a minus`
         }
       }
     },
@@ -64,17 +71,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          message: `Stock can't be empty`
+          msg: `Stock can't be empty`
         },
         notEmpty: {
-          message: `Stock can't be empty`
+          msg: `Stock can't be empty`
         },
         isNumeric: {
-          message: 'Stock must be a number'
+          msg: 'Stock must be a number'
         },
         min: {
           args: 1,
-          message: `Stock can't be a minus`
+          msg: `Stock can't be a minus`
         }
       }
     }

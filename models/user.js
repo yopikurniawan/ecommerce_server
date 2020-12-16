@@ -58,7 +58,9 @@ module.exports = (sequelize, DataTypes) => {
     instance.password = hashPassword(instance.password)
   })
 
-
+  User.addHook('beforeValidate', user => {
+    user.role = 'customer'
+  })
   
   return User;
 };
