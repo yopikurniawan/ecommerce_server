@@ -50,7 +50,7 @@ class Auth {
         const id = +req.params.id
         const banner = await Banner.findByPk(id)
   
-        if (req.user.role !== 'admin') {
+        if (req.loggedInUser.role !== 'admin') {
           throw createError(401, 'You are not authorized')
         } else if (!banner) {
           throw createError(404, 'banner not found!')
@@ -58,7 +58,7 @@ class Auth {
           next()
         }
       } else {
-        if (req.user.role !== 'admin') {
+        if (req.loggedInUser.role !== 'admin') {
           throw createError(401, 'You are not authorized')
         } else {
           next()
