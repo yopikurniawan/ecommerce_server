@@ -11,7 +11,7 @@ router.use(Auth.authentication)
 router.get('/:id', BannerController.getOne)
 router.post('/', BannerController.addBanner)
 
-router.use('/:id', Auth.authorization_banner)
+router.use('/:id', Auth.authorizationBanner)
 
 router.put('/:id', BannerController.updateBanner)
 router.delete('/:id', BannerController.deleteBanner)

@@ -1,4 +1,4 @@
-const {User, Product} = require('../models')
+const {User, Product, Banner} = require('../models')
 const {verifyToken} = require('../helpers/jwt')
 const createError = require('http-errors')
 
@@ -38,6 +38,31 @@ class Auth {
         if (req.loggedInUser.email !== 'admin@mail.com') {
           throw createError(401, 'You are not authorized')
         } else next()
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async authorizationBanner (req, res, next) {
+    try {
+      if (req.params.id) {
+        const id = +req.params.id
+        const banner = await Banner.findByPk(id)
+  
+        if (req.user.role !== 'admin') {
+          throw createError(401, 'You are not authorized')
+        } else if (!banner) {
+          throw createError(404, 'banner not found!')
+        } else {
+          next()
+        }
+      } else {
+        if (req.user.role !== 'admin') {
+          throw createError(401, 'You are not authorized')
+        } else {
+          next()
+        }
       }
     } catch (error) {
       next(error)
