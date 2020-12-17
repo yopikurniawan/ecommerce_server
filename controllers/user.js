@@ -34,20 +34,46 @@ class UserController {
 
 	static async loginCustomer (req, res, next) {
 		try {
-			const {email, password} = req.body
-			const user = await User.findOne({where: {email}})
+      const payload = {
+        email: req.body.email,
+        password: req.body.password
+      }
 
-			if (!user || !comparePassword(password, user.password)) {
-				throw createError(400, 'username or password is incorrect')
-			} else {
-				const payload = {id: user.id, email: user.email}
-				const token = signToken(payload)
-				res.status(200).json({access_token: token})
-			}
-		} catch (error) {
-			next(error)
-		}
-	}
+      const user = await User.findOne({
+        where: {
+          email: payload.email,
+          role: 'customer'
+        }
+      })
+
+      if (!user) {
+        throw {
+          msg: 'email or password is incorrect',
+          status: 401
+        }
+      } else if (!comparePassword(payload.password, user.password)) {
+        throw {
+          msg: 'email or password is incorrect',
+          status: 401
+        }
+      } else {
+        const payload = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role
+        }
+        const token = signToken(payload)
+        res.status(200).json({
+          access_token: token,
+          user: payload
+        })
+      }
+
+    } catch (err) {
+      next(err)
+    }
+  }
 }
 
 module.exports = UserController
