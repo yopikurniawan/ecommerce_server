@@ -7,7 +7,7 @@ router.use(Auth.authentication)
 
 router.get('/', CartController.showAll)
 router.get('/history', CartController.getHistory)
-router.post('/', CartController.updateChart)
+router.post('/', CartController.updateCart)
 router.delete('/checkout', CartController.checkout)
 
 router.delete('/:id', Auth.authorization, CartController.removeCart)

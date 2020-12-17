@@ -25,6 +25,8 @@
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.17",
     "pg": "^8.5.1",
     "sequelize": "^6.3.5"
   },
