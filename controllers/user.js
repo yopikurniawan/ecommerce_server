@@ -24,12 +24,29 @@ class UserController {
 	
 	static async register (req, res, next) {
 		try {
-			const {username, email, password} = req.body
-			const user = await User.create({username, email, password})
-			res.status(201).json(user)
-		} catch (error) {
-			next(error)
-		}
+      const payload = {
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+      }
+
+      const user = await User.create(payload)
+
+      const data = {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      }
+
+      const token = signToken(data)
+      res.status(201).json({
+        access_token: token,
+        user: data
+      })
+    } catch (err) {
+      next(err)
+    }
 	}
 
 	static async loginCustomer (req, res, next) {
